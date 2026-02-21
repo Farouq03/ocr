@@ -1,0 +1,14 @@
+name: Deploy to Easypanel
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Easypanel Deployment
+        run: |
+          curl -X POST "${{ secrets.EASYPANEL_WEBHOOK_URL }}"
