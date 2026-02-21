@@ -1,0 +1,23 @@
+from flask import Flask, request, jsonify
+from ocr_paddle import process_with_paddle
+import traceback
+
+app = Flask(__name__)
+
+@app.route('/ocr', methods=['POST'])
+def ocr_post():
+    incoming_data = request.get_json()
+    
+    file_data = incoming_data.get("file_data")
+    if not file_data:
+        return jsonify({"error": "No file data provided"}), 400
+
+    try:
+        result = process_with_paddle(file_data)
+        return jsonify({"result": result})
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True, threaded=False)
