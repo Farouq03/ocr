@@ -14,5 +14,5 @@ COPY . .
 # Ekspose port Flask (defaultnya 5000)
 EXPOSE 5000
 
-# Jalankan aplikasi Flask (menggunakan Gunicorn agar lebih stabil di production)
+# Jalankan aplikasi Flask 
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "flask_api:app"]
