@@ -4,9 +4,9 @@ FROM python:3.9-slim
 # Tentukan folder kerja
 WORKDIR .
 
-# Salin file requirements.txt dan install library
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Salin file requirement.txt dan install library
+COPY requirement.txt .
+RUN pip install --no-cache-dir -r requirement.txt
 
 # Salin seluruh kode aplikasi
 COPY . .
