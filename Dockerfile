@@ -15,4 +15,4 @@ COPY . .
 EXPOSE 5000
 
 # Jalankan aplikasi Flask 
-CMD ["python", "flask_api.py"]
+CMD ["python", "--bind", "0.0.0.0:5000", "flask_api:app"]
