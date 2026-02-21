@@ -2,3 +2,4 @@ paddleocr>=2.6.0
 paddlepaddle
 openai
 python-dotenv
+flask
