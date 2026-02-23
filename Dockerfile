@@ -19,4 +19,4 @@ COPY . .
 # Ekspose port Flask (defaultnya 5000)
 EXPOSE 5000
 
-CMD ["gunicorn", "--access-logfile", "-", "--error-logfile", "-", "--bind", "0.0.0.0:5000", "flask_api:app"]
+CMD ["python", "flask_api.py"]
