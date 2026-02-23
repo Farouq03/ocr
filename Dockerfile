@@ -19,4 +19,4 @@ COPY . .
 # Ekspose port Flask (defaultnya 5000)
 EXPOSE 5000
 
-CMD ["python", "flask_api.py"]
+CMD ["python3", "flask_api.py"]
