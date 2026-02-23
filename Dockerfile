@@ -19,4 +19,5 @@ COPY . .
 # Ekspose port Flask (defaultnya 5000)
 EXPOSE 5000
 
-CMD ["python3", "flask_api.py"]
+# Tambahkan ini di bagian paling bawah Dockerfile
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "flask_api:app"]
