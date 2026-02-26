@@ -1,6 +1,10 @@
 from flask import Flask, request, jsonify
 from ocr_paddle import process_with_paddle
 import traceback
+from dotenv import load_dotenv
+import os
+load_dotenv()
+ip = os.getenv("IP_ADDRESS")
 
 app = Flask(__name__)
 
@@ -20,4 +24,4 @@ def ocr_post():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, threaded=False)
+    app.run(host=f"{ip}", port=5000, threaded=False)
