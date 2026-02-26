@@ -21,4 +21,4 @@ EXPOSE 5000
 
 # Tambahkan ini di bagian paling bawah Dockerfile
 # Tambahkan log file agar error terlihat di dashboard Easypanel
-CMD ["python3", "flask_api.py"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "1", "--timeout", "120", "--access-logfile", "-", "--error-logfile", "-", "flask_api:app"]

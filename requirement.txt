@@ -3,3 +3,4 @@ paddlepaddle
 openai
 python-dotenv
 flask
+gunicorn
