@@ -6,6 +6,8 @@ RUN apt-get update && apt-get install -y \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
+ENV PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK=True
+
 # Tentukan folder kerja
 WORKDIR /app
 
