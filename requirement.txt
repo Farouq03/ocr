@@ -1,5 +1,5 @@
 paddleocr==2.7.3
-paddlepaddle==2.5.2
+paddlepaddle==2.6.2
 openai
 python-dotenv
 flask

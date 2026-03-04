@@ -11,6 +11,8 @@ ENV PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK=True
 ENV PYTHONUNBUFFERED=1
 ENV FLAGS_allocator_strategy=naive_best_fit
 ENV FLAGS_fraction_of_gpu_memory_to_use=0
+ENV FLAGS_use_mkldnn=0
+ENV OMP_NUM_THREADS=1
 
 # Tentukan folder kerja
 WORKDIR /app
