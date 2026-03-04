@@ -84,15 +84,11 @@ def process_with_paddle(image_path):
         
         # print("Merapikan data dengan AI Lokal...")
 
-        response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant that converts OCR text into structured JSON."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0,
+        response = client.responses.create(
+            input=prompt,
+            model="openai/gpt-oss-20b",
         )
-        return response.choices[0].message.content
+        return response.output_text 
     
     except Exception as e:
         print(f"Error in process_with_paddle: {str(e)}")
