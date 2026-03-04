@@ -8,6 +8,13 @@ ip = os.getenv("IP_ADDRESS")
 
 app = Flask(__name__)
 
+@app.route('/', methods=['GET'])
+def health_check():
+    return jsonify({
+        "status": "online",
+        "message": "OCR API is running. Use /ocr (POST) for processing."
+    })
+
 @app.route('/ocr', methods=['POST'])
 def ocr_post():
     incoming_data = request.get_json()

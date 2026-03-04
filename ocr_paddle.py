@@ -11,20 +11,24 @@ import gc
 # Load environment variables from .env file
 load_dotenv()
 
-# use_angle_cls=True membantu mendeteksi jika teks terbalik/miring
+# Initialize API Client
 groq_api_key = os.getenv('GROQ_API_KEY')
 client = OpenAI(
     api_key=groq_api_key, 
     base_url="https://api.groq.com/openai/v1",
 )
 
+# Initialize PaddleOCR globally so it's loaded once at startup
+print("Inisialisasi PaddleOCR...")
+ocr_instance = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=False) 
+
 def process_with_paddle(image_path):
     # print(f"Memproses {image_path} dengan PaddleOCR...")
     
     # Ekstraksi teks
     try:
-        ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=False) # 'en' mencakup karakter Indonesia juga
-        result = ocr.ocr(image_path)
+        # Gunakan instance global
+        result = ocr_instance.ocr(image_path)
         
         # Gabungkan semua teks yang terdeteksi
         full_text = []
@@ -74,14 +78,22 @@ def process_with_paddle(image_path):
         
         # print("Merapikan data dengan AI Lokal...")
 
-        response = client.responses.create(
-            input=prompt,
-            model="openai/gpt-oss-20b",
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant that converts OCR text into structured JSON."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0,
         )
-        return response.output_text
+        return response.choices[0].message.content
+    
+    except Exception as e:
+        print(f"Error in process_with_paddle: {str(e)}")
+        raise e
     
     finally:
-        del ocr
+        # Gunakan garbage collection jika perlu
         gc.collect()
 
 if __name__ == "__main__":
