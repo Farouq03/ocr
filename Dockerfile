@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 ENV PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK=True
+ENV PYTHONUNBUFFERED=1
 
 # Tentukan folder kerja
 WORKDIR /app
