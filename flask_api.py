@@ -27,15 +27,33 @@ def ocr_post():
 
     temp_path = None
     try:
-        # Check if file_data is likely a base64 string
-        # If it doesn't look like a path and is long, treat as base64
-        if not file_data.startswith('/') and len(file_data) > 200:
-            with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_file:
-                temp_file.write(base64.b64decode(file_data))
-                temp_path = temp_file.name
-            path_to_process = temp_path
+        file_data = file_data.strip()
+        
+        # Remove data URI prefix if present (e.g., data:image/pdf;base64,...)
+        if "," in file_data and len(file_data) > 100:
+            file_data = file_data.split(",")[-1]
+
+        # Robust base64 detection: 
+        # 1. Very long strings (> 500 chars) are almost certainly NOT paths
+        # 2. If it's not an existing absolute path, treat as base64
+        is_base64 = len(file_data) > 500 or (not os.path.exists(file_data) and not os.path.isabs(file_data))
+
+        if is_base64:
+            try:
+                # Validate it's actually base64 by trying to decode a small piece
+                base64.b64decode(file_data[:100], validate=False)
+                
+                with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_file:
+                    temp_file.write(base64.b64decode(file_data))
+                    temp_path = temp_file.name
+                path_to_process = temp_path
+            except Exception as b64_err:
+                return jsonify({"error": f"Failed to decode base64 data: {str(b64_err)}"}), 400
         else:
             path_to_process = file_data
+
+        if not os.path.exists(path_to_process):
+            return jsonify({"error": f"File not found: {path_to_process}"}), 404
 
         result = process_with_paddle(path_to_process)
         return jsonify({"result": result})
@@ -43,9 +61,11 @@ def ocr_post():
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
     finally:
-        # Clean up the temp file if we created one
         if temp_path and os.path.exists(temp_path):
-            os.remove(temp_path)
+            try:
+                os.remove(temp_path)
+            except:
+                pass
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True, threaded=False)
