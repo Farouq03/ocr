@@ -20,7 +20,13 @@ client = OpenAI(
 
 # Initialize PaddleOCR globally so it's loaded once at startup
 print("Inisialisasi PaddleOCR...")
-ocr_instance = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=False) 
+try:
+    # Coba dengan argumen lengkap
+    ocr_instance = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=False) 
+except ValueError as e:
+    print(f"Peringatan: Inisialisasi dengan argumen lengkap gagal ({e}). Mencoba tanpa use_gpu...")
+    # Jika use_gpu tidak dikenal, coba tanpa itu
+    ocr_instance = PaddleOCR(use_angle_cls=True, lang='en')
 
 def process_with_paddle(image_path):
     # print(f"Memproses {image_path} dengan PaddleOCR...")
